@@ -23,10 +23,12 @@ from sonnet.src.optimizers import momentum as momentum_lib
 from sonnet.src.optimizers import optimizer_tests
 import tensorflow as tf
 
+import numpy as np
+
 CONFIGS = optimizer_tests.named_product(learning_rate=(0.1, 0.01, 0.001),
                                         momentum=(0.9, 0.5, 0.2),
                                         use_nesterov=(True, False),
-                                        seed=(28, 2, 90))
+                                        seed=(np.random.randint(1, 9999999), np.random.randint(1, 9999999), np.random.randint(1, 9999999)))
 
 
 class ComparisonTest(optimizer_tests.AbstractFuzzTest):
