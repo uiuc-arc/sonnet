@@ -23,13 +23,11 @@ from sonnet.src.optimizers import adam
 from sonnet.src.optimizers import optimizer_tests
 import tensorflow as tf
 
-import numpy as np
-
 CONFIGS = optimizer_tests.named_product(learning_rate=(0.1, 0.01, 0.001),
                                         beta_1=(0.9, 0.99, 0.999),
                                         beta_2=(0.9, 0.99, 0.999),
                                         epsilon=(1e-8,),
-                                        seed=(np.random.randint(1, 9999999), np.random.randint(1, 9999999), np.random.randint(1, 9999999)))
+                                        seed=(28, 2, 90))
 
 
 class ComparisonTest(optimizer_tests.AbstractFuzzTest):

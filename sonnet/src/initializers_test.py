@@ -138,7 +138,7 @@ class RandomUniformInitializerTest(InitializersTest):
   def testRangeInitializer(self):
     shape = (16, 8, 128)
     self.assertRange(
-        initializers.RandomUniform(minval=-1., maxval=1., seed=np.random.randint(1, 9999999),
+        initializers.RandomUniform(minval=-1., maxval=1., seed=124.),
         shape,
         target_mean=0.,
         target_max=1,
@@ -156,7 +156,7 @@ class RandomUniformInitializerTest(InitializersTest):
       init([1], dtype=tf.string)
 
   def testTFFunction(self):
-    init = initializers.RandomUniform(seed=np.random.randint(1, 9999999))
+    init = initializers.RandomUniform(seed=42)
     f = tf.function(lambda t: init(tf.shape(t), t.dtype))
 
     expected = init([7, 4], tf.float32)
@@ -166,7 +166,7 @@ class RandomUniformInitializerTest(InitializersTest):
       self.assertAllEqual(expected, x)
 
   def testBatchAgnostic(self):
-    init = initializers.RandomUniform(seed=np.random.randint(1, 9999999))
+    init = initializers.RandomUniform(seed=42)
     spec = tf.TensorSpec(shape=[None, None])
     f = tf.function(lambda t: init(tf.shape(t), t.dtype))
     f = f.get_concrete_function(spec)
@@ -182,7 +182,7 @@ class RandomNormalInitializerTest(InitializersTest):
 
   def testRangeInitializer(self):
     self.assertRange(
-        initializers.RandomNormal(mean=0, stddev=1, seed=np.random.randint(1, 9999999)),
+        initializers.RandomNormal(mean=0, stddev=1, seed=153),
         shape=(16, 8, 128),
         target_mean=0.,
         target_std=1)
@@ -199,7 +199,7 @@ class RandomNormalInitializerTest(InitializersTest):
       init([1], dtype=dtype)
 
   def testTFFunction(self):
-    init = initializers.RandomNormal(seed=np.random.randint(1, 9999999))
+    init = initializers.RandomNormal(seed=42)
     f = tf.function(lambda t: init(tf.shape(t), t.dtype))
 
     expected = init([7, 4], tf.float32)
@@ -209,7 +209,7 @@ class RandomNormalInitializerTest(InitializersTest):
       self.assertAllEqual(expected, x)
 
   def testBatchAgnostic(self):
-    init = initializers.RandomNormal(seed=np.random.randint(1, 9999999))
+    init = initializers.RandomNormal(seed=42)
     spec = tf.TensorSpec(shape=[None, None])
     f = tf.function(lambda t: init(tf.shape(t), t.dtype))
     f = f.get_concrete_function(spec)
@@ -225,7 +225,7 @@ class TruncatedNormalInitializerTest(InitializersTest):
 
   def testRangeInitializer(self):
     self.assertRange(
-        initializers.TruncatedNormal(mean=0, stddev=1, seed=np.random.randint(1, 9999999)),
+        initializers.TruncatedNormal(mean=0, stddev=1, seed=126),
         shape=(16, 8, 128),
         target_mean=0.,
         target_max=2,
@@ -243,7 +243,7 @@ class TruncatedNormalInitializerTest(InitializersTest):
       init([1], dtype=dtype)
 
   def testTFFunction(self):
-    init = initializers.TruncatedNormal(seed=np.random.randint(1, 9999999))
+    init = initializers.TruncatedNormal(seed=42)
     f = tf.function(lambda t: init(tf.shape(t), t.dtype))
 
     expected = init([7, 4], tf.float32)
@@ -253,7 +253,7 @@ class TruncatedNormalInitializerTest(InitializersTest):
       self.assertAllEqual(expected, x)
 
   def testBatchAgnostic(self):
-    init = initializers.TruncatedNormal(seed=np.random.randint(1, 9999999))
+    init = initializers.TruncatedNormal(seed=42)
     spec = tf.TensorSpec(shape=[None, None])
     f = tf.function(lambda t: init(tf.shape(t), t.dtype))
     f = f.get_concrete_function(spec)
@@ -326,7 +326,7 @@ class OrthogonalInitializerTest(InitializersTest):
 
   def testRangeInitializer(self):
     self.assertRange(
-        initializers.Orthogonal(seed=np.random.randint(1, 9999999)), shape=(20, 20), target_mean=0.)
+        initializers.Orthogonal(seed=123), shape=(20, 20), target_mean=0.)
 
   def testDuplicatedInitializer(self):
     init = initializers.Orthogonal()
@@ -366,7 +366,7 @@ class OrthogonalInitializerTest(InitializersTest):
           np.dot(t, t.T), np.eye(t.shape[0]), rtol=tol, atol=tol)
 
   def testTFFunctionSimple(self):
-    init = initializers.Orthogonal(seed=np.random.randint(1, 9999999))
+    init = initializers.Orthogonal(seed=42)
     f = tf.function(init)
 
     x = f([4, 4], tf.float32)
@@ -376,7 +376,7 @@ class OrthogonalInitializerTest(InitializersTest):
     if self.primary_device == "TPU":
       self.skipTest("Dynamic slice not supported on TPU")
 
-    init = initializers.Orthogonal(seed=np.random.randint(1, 9999999))
+    init = initializers.Orthogonal(seed=42)
     f = tf.function(lambda t: init(tf.shape(t), t.dtype))
 
     expected = init([4, 4], tf.float32)
@@ -387,7 +387,7 @@ class OrthogonalInitializerTest(InitializersTest):
     if self.primary_device == "TPU":
       self.skipTest("Dynamic slice not supported on TPU")
 
-    init = initializers.Orthogonal(seed=np.random.randint(1, 9999999))
+    init = initializers.Orthogonal(seed=42)
     spec = tf.TensorSpec(shape=[None, None])
     f = tf.function(lambda t: init(tf.shape(t), t.dtype))
     f = f.get_concrete_function(spec)
@@ -426,7 +426,7 @@ class VarianceScalingInitializerTest(InitializersTest):
     std = np.sqrt(2. / (fan_in + fan_out))
     self.assertRange(
         initializers.VarianceScaling(
-            scale=1.0, mode="fan_avg", distribution="uniform", seed=np.random.randint(1, 9999999)),
+            scale=1.0, mode="fan_avg", distribution="uniform", seed=123),
         shape,
         target_mean=0.,
         target_std=std)
@@ -440,7 +440,7 @@ class VarianceScalingInitializerTest(InitializersTest):
             scale=1.0,
             mode="fan_avg",
             distribution="truncated_normal",
-            seed=np.random.randint(1, 9999999)),
+            seed=123),
         shape,
         target_mean=0.,
         target_std=std)
@@ -451,7 +451,7 @@ class VarianceScalingInitializerTest(InitializersTest):
     std = np.sqrt(1. / fan_in)
     self.assertRange(
         initializers.VarianceScaling(
-            scale=1.0, mode="fan_in", distribution="uniform", seed=np.random.randint(1, 9999999)),
+            scale=1.0, mode="fan_in", distribution="uniform", seed=123),
         shape,
         target_mean=0.,
         target_std=std)
@@ -463,7 +463,7 @@ class VarianceScalingInitializerTest(InitializersTest):
     self.assertRange(
         initializers.VarianceScaling(
             scale=1.0, mode="fan_in", distribution="truncated_normal",
-            seed=np.random.randint(1, 9999999)),
+            seed=123),
         shape,
         target_mean=0.,
         target_std=std)
@@ -474,7 +474,7 @@ class VarianceScalingInitializerTest(InitializersTest):
     std = np.sqrt(2. / fan_in)
     self.assertRange(
         initializers.VarianceScaling(
-            scale=2.0, mode="fan_in", distribution="uniform", seed=np.random.randint(1, 9999999)),
+            scale=2.0, mode="fan_in", distribution="uniform", seed=123),
         shape,
         target_mean=0.,
         target_std=std)
@@ -486,7 +486,7 @@ class VarianceScalingInitializerTest(InitializersTest):
     self.assertRange(
         initializers.VarianceScaling(
             scale=2.0, mode="fan_in", distribution="truncated_normal",
-            seed=np.random.randint(1, 9999999)),
+            seed=123),
         shape,
         target_mean=0.,
         target_std=std)
@@ -496,9 +496,9 @@ class VarianceScalingInitializerTest(InitializersTest):
                         ["uniform", "truncated_normal", "normal"]))
   def testMixedShape(self, mode, distribution):
     init = initializers.VarianceScaling(mode=mode, distribution=distribution)
-    tf.random.set_seed(np.random.randint(1, 9999999))
+    tf.random.set_seed(42)
     x = init([tf.constant(4), 2], tf.float32)
-    tf.random.set_seed(np.random.randint(1, 9999999))
+    tf.random.set_seed(42)
     expected = init([4, 2], tf.float32)
     self.assertEqual(x.shape, [4, 2])
     if self.primary_device != "TPU":  # Seeds don't work as expected on TPU
@@ -509,7 +509,7 @@ class VarianceScalingInitializerTest(InitializersTest):
                         ["uniform", "truncated_normal", "normal"]))
   def testWithTFFunction(self, mode, distribution):
     init = initializers.VarianceScaling(
-        mode=mode, distribution=distribution, seed=np.random.randint(1, 9999999))
+        mode=mode, distribution=distribution, seed=42)
     f = tf.function(lambda t: init(tf.shape(t), t.dtype))
     x = f(tf.zeros([4, 2]))
     expected = init([4, 2], tf.float32)
@@ -522,7 +522,7 @@ class VarianceScalingInitializerTest(InitializersTest):
                         ["uniform", "truncated_normal", "normal"]))
   def testBatchAgnostic(self, mode, distribution):
     init = initializers.VarianceScaling(
-        mode=mode, distribution=distribution, seed=np.random.randint(1, 9999999))
+        mode=mode, distribution=distribution, seed=42)
     spec = tf.TensorSpec(shape=[None, None])
     f = tf.function(lambda t: init(tf.shape(t), t.dtype))
     f = f.get_concrete_function(spec)

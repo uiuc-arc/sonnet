@@ -29,14 +29,13 @@ from sonnet.src.distribute import replicator_test_utils as replicator_utils
 import tensorflow as tf
 from typing import Callable, Tuple
 
-import numpy as np
 
 class TpuReplicatorTest(test_utils.TestCase, parameterized.TestCase):
 
   @test_utils.combined_named_parameters(goldens.named_goldens(),
                                         replicator_utils.named_replicators())
   def test_variable_creation_in_replica_context(self, golden, replicator_fn):
-    tf.random.set_seed(np.random.randint(1, 9999999))
+    tf.random.set_seed(None)
     replicator = replicator_fn()
 
     with replicator.scope():

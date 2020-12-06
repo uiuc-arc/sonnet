@@ -132,7 +132,7 @@ class AbstractFuzzTest(test_utils.TestCase, parameterized.TestCase):
     snt_opt = self._make_snt(**config)
 
     # TODO(tomhennigan) Add sparse data.
-    data = _generate_dense_data(np.random.randint(1, 9999999), num_steps)
+    data = _generate_dense_data(seed, num_steps)
     tf_params = _apply_optimizer(data, tf_opt)
     snt_params = _apply_optimizer(data, snt_opt)
     assert tf_params and len(tf_params) == len(snt_params)
@@ -148,7 +148,7 @@ class AbstractFuzzTest(test_utils.TestCase, parameterized.TestCase):
 def _generate_dense_data(seed, num_steps):
   """Generates deterministic random parameters and gradients."""
   # Use numpy random since it is deterministic (unlike TF).
-  np.random.seed(seed=np.random.randint(1, 9999999))
+  np.random.seed(seed=seed)
   params = [
       np.random.normal(size=(10, 10, 10)).astype(np.float32),
       np.random.normal(size=(10, 10)).astype(np.float32),

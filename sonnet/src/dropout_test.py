@@ -53,7 +53,7 @@ class DropoutTest(test_utils.TestCase, parameterized.TestCase):
   def test_dropout_is_actually_random(self):
     mod = dropout.Dropout(rate=0.5)
     x = tf.ones([1000])
-    tf.random.set_seed(np.random.randint(1, 9999999))
+    tf.random.set_seed(1)
     y1 = mod(x, is_training=True)
     y2 = mod(x, is_training=True)
     self.assertNotAllClose(y1, y2)
