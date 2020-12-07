@@ -138,7 +138,7 @@ class RandomUniformInitializerTest(InitializersTest):
   def testRangeInitializer(self):
     shape = (16, 8, 128)
     self.assertRange(
-        initializers.RandomUniform(minval=-1., maxval=1., seed=np.random.randint(1, 9999999),
+        initializers.RandomUniform(minval=-1., maxval=1., seed=np.random.randint(1, 9999999)),
         shape,
         target_mean=0.,
         target_max=1,
